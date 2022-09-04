@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project(primeArray)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
+file(GLOB mainSrc ${PROJECT_SOURCE_DIR}/main.cc)
+file(GLOB utils ${PROJECT_SOURCE_DIR}/vecutil.*)
+add_executable(${PROJECT_NAME} ${mainSrc} ${utils})
+set(CMAKE_CXX_FLAGS "-mcmodel=medium -std=c++14 -pthread -O3 -fopenmp")
