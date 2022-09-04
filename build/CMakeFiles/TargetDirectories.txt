@@ -1,0 +1,3 @@
+/home/ahsan/primeapp/build/CMakeFiles/edit_cache.dir
+/home/ahsan/primeapp/build/CMakeFiles/rebuild_cache.dir
+/home/ahsan/primeapp/build/CMakeFiles/primeArray.dir
