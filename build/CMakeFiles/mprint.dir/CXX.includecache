@@ -6,43 +6,21 @@
 
 #IncludeRegexTransform: 
 
-/home/it/prime/primeapp/main.cc
+/home/it/prime/primeapp/mersenneprint.cc
 iostream
 -
-iomanip
+cstdlib
 -
 vector
 -
 fstream
 -
-cstring
--
-string
--
-cstdlib
--
-iterator
--
-atomic
--
 chrono
 -
-ctime
+iomanip
 -
 algorithm
 -
-map
--
-climits
--
-cmath
--
-csignal
--
-unistd.h
--
-vecutil.hh
-/home/it/prime/primeapp/vecutil.hh
 
 /home/it/prime/primeapp/vecutil.cc
 vecutil.hh

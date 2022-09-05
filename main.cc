@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
   int *array;
   array = new int(read.size());
   printArray(&read,array);
-  for (int i = 0;i<read.size();i++) {
+  for (int i = read.size()-1;i>=0;i--) {
     cout << setw(8) << setfill('0') <<array[i];
   }
   cout << endl;
@@ -119,6 +119,24 @@ int main(int argc, char *argv[]) {
   time_t currTime2_t = system_clock::to_time_t(currTime2);
   cout << ctime(&currTime2_t);
   return 0;
+}
+
+inline void printArray(vector<int>* input, int* output) {
+  vector<int>::iterator itr = input->begin();
+  int i = 0;
+  cout << "before while" <<endl;
+  while(itr != input->end()) {
+    char buf[9];
+    int ibuf;
+    //cout <<"here1" <<endl;
+    sprintf(buf,"%X",*itr);
+    //cout <<"here2" <<endl;
+    sscanf(buf,"%d",&ibuf);
+    //cout <<"here3" <<endl;
+    output[i++] = ibuf;
+    itr++;
+  }
+  cout << "conversion done" <<endl;
 }
 
 void doubleDabble(int input) {
@@ -372,24 +390,6 @@ inline void printHexFileDabble(vector<int>* input, const char* str, int inP) {
     inFile << hex << setw(8) << setfill('0') << *itr++;
   }
   inFile.close();
-}
-
-inline void printArray(vector<int>* input, int* output) {
-  vector<int>::iterator itr = input->begin();
-  int i = 0;
-  cout << "before while" <<endl;
-  while(itr != input->end()) {
-    char buf[9];
-    int ibuf;
-    cout <<"here1" <<endl;
-    sprintf(buf,"%X",*itr);
-    cout <<"here2" <<endl;
-    sscanf(buf,"%d",&ibuf);
-    cout <<"here3" <<endl;
-    output[i++] = ibuf;
-    itr++;
-  }
-  cout << "conversion done" <<endl;
 }
 
 inline int add3Integer(int in)

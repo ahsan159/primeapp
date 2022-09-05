@@ -42,4 +42,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/primeArray.dir/DependInfo.cmake"
+  "CMakeFiles/mprint.dir/DependInfo.cmake"
   )
