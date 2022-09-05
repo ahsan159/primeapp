@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/it/prime/primeapp/build",
+  "command": "/usr/bin/c++     -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   -o CMakeFiles/primeArray.dir/main.cc.o -c /home/it/prime/primeapp/main.cc",
+  "file": "/home/it/prime/primeapp/main.cc"
+},
+{
+  "directory": "/home/it/prime/primeapp/build",
+  "command": "/usr/bin/c++     -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   -o CMakeFiles/primeArray.dir/vecutil.cc.o -c /home/it/prime/primeapp/vecutil.cc",
+  "file": "/home/it/prime/primeapp/vecutil.cc"
+},
+{
+  "directory": "/home/it/prime/primeapp/build",
+  "command": "/usr/bin/c++     -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   -o CMakeFiles/mprint.dir/mersenneprint.cc.o -c /home/it/prime/primeapp/mersenneprint.cc",
+  "file": "/home/it/prime/primeapp/mersenneprint.cc"
+},
+{
+  "directory": "/home/it/prime/primeapp/build",
+  "command": "/usr/bin/c++     -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   -o CMakeFiles/mprint.dir/vecutil.cc.o -c /home/it/prime/primeapp/vecutil.cc",
+  "file": "/home/it/prime/primeapp/vecutil.cc"
+}
+]

@@ -123,6 +123,19 @@ primeArray/fast:
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/build
 .PHONY : primeArray/fast
 
+#=============================================================================
+# Target rules for targets named mprint
+
+# Build rule for target.
+mprint: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mprint
+.PHONY : mprint
+
+# fast build rule for target.
+mprint/fast:
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/build
+.PHONY : mprint/fast
+
 main.o: main.cc.o
 
 .PHONY : main.o
@@ -150,6 +163,33 @@ main.cc.s:
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/main.cc.s
 .PHONY : main.cc.s
 
+mersenneprint.o: mersenneprint.cc.o
+
+.PHONY : mersenneprint.o
+
+# target to build an object file
+mersenneprint.cc.o:
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/mersenneprint.cc.o
+.PHONY : mersenneprint.cc.o
+
+mersenneprint.i: mersenneprint.cc.i
+
+.PHONY : mersenneprint.i
+
+# target to preprocess a source file
+mersenneprint.cc.i:
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/mersenneprint.cc.i
+.PHONY : mersenneprint.cc.i
+
+mersenneprint.s: mersenneprint.cc.s
+
+.PHONY : mersenneprint.s
+
+# target to generate assembly for a file
+mersenneprint.cc.s:
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/mersenneprint.cc.s
+.PHONY : mersenneprint.cc.s
+
 vecutil.o: vecutil.cc.o
 
 .PHONY : vecutil.o
@@ -157,6 +197,7 @@ vecutil.o: vecutil.cc.o
 # target to build an object file
 vecutil.cc.o:
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/vecutil.cc.o
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/vecutil.cc.o
 .PHONY : vecutil.cc.o
 
 vecutil.i: vecutil.cc.i
@@ -166,6 +207,7 @@ vecutil.i: vecutil.cc.i
 # target to preprocess a source file
 vecutil.cc.i:
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/vecutil.cc.i
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/vecutil.cc.i
 .PHONY : vecutil.cc.i
 
 vecutil.s: vecutil.cc.s
@@ -175,6 +217,7 @@ vecutil.s: vecutil.cc.s
 # target to generate assembly for a file
 vecutil.cc.s:
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/vecutil.cc.s
+	$(MAKE) -f CMakeFiles/mprint.dir/build.make CMakeFiles/mprint.dir/vecutil.cc.s
 .PHONY : vecutil.cc.s
 
 # Help Target
@@ -186,9 +229,13 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... primeArray"
+	@echo "... mprint"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... mersenneprint.o"
+	@echo "... mersenneprint.i"
+	@echo "... mersenneprint.s"
 	@echo "... vecutil.o"
 	@echo "... vecutil.i"
 	@echo "... vecutil.s"
