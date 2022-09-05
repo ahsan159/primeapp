@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/ahsan/primeapp/main.cc" "/home/ahsan/primeapp/build/CMakeFiles/primeArray.dir/main.cc.o"
-  "/home/ahsan/primeapp/vecutil.cc" "/home/ahsan/primeapp/build/CMakeFiles/primeArray.dir/vecutil.cc.o"
+  "/home/it/prime/primeapp/main.cc" "/home/it/prime/primeapp/build/CMakeFiles/primeArray.dir/main.cc.o"
+  "/home/it/prime/primeapp/vecutil.cc" "/home/it/prime/primeapp/build/CMakeFiles/primeArray.dir/vecutil.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

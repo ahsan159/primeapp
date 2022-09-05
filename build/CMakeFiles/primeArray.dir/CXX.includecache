@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/ahsan/primeapp/main.cc
+/home/it/prime/primeapp/main.cc
 iostream
 -
 iomanip
@@ -42,11 +42,11 @@ csignal
 unistd.h
 -
 vecutil.hh
-/home/ahsan/primeapp/vecutil.hh
+/home/it/prime/primeapp/vecutil.hh
 
-/home/ahsan/primeapp/vecutil.cc
+/home/it/prime/primeapp/vecutil.cc
 vecutil.hh
-/home/ahsan/primeapp/vecutil.hh
+/home/it/prime/primeapp/vecutil.hh
 iostream
 -
 cstdio
@@ -56,5 +56,5 @@ vector
 cstdlib
 -
 
-/home/ahsan/primeapp/vecutil.hh
+/home/it/prime/primeapp/vecutil.hh
 

@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ahsan/primeapp
+CMAKE_SOURCE_DIR = /home/it/prime/primeapp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ahsan/primeapp/build
+CMAKE_BINARY_DIR = /home/it/prime/primeapp/build
 
 #=============================================================================
 # Target rules for target CMakeFiles/primeArray.dir
@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = /home/ahsan/primeapp/build
 CMakeFiles/primeArray.dir/all:
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/depend
 	$(MAKE) -f CMakeFiles/primeArray.dir/build.make CMakeFiles/primeArray.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/ahsan/primeapp/build/CMakeFiles --progress-num=1,2,3 "Built target primeArray"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/it/prime/primeapp/build/CMakeFiles --progress-num=1,2,3 "Built target primeArray"
 .PHONY : CMakeFiles/primeArray.dir/all
 
 # Include target in all.
@@ -76,9 +76,9 @@ all: CMakeFiles/primeArray.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/primeArray.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ahsan/primeapp/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/it/prime/primeapp/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/primeArray.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ahsan/primeapp/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/it/prime/primeapp/build/CMakeFiles 0
 .PHONY : CMakeFiles/primeArray.dir/rule
 
 # Convenience name for target.
