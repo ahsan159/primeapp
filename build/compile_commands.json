@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/ahsan/primeapp/build",
+  "command": "/usr/bin/c++     -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   -o CMakeFiles/primeArray.dir/main.cc.o -c /home/ahsan/primeapp/main.cc",
+  "file": "/home/ahsan/primeapp/main.cc"
+},
+{
+  "directory": "/home/ahsan/primeapp/build",
+  "command": "/usr/bin/c++     -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   -o CMakeFiles/primeArray.dir/vecutil.cc.o -c /home/ahsan/primeapp/vecutil.cc",
+  "file": "/home/ahsan/primeapp/vecutil.cc"
+}
+]
