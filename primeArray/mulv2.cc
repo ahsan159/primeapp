@@ -29,7 +29,7 @@ void printHexFile(vector<int>*, const char*);
 void getDecimalVector(vector<int>*,vector<unsigned int>*);
 void printDecimalVectorFile(vector<unsigned int>*,const char*);
 void printDecimalVector(vector<unsigned int>*);
-void addNumbers(vector<unsigned int>*, vector<unsigned int>*, vector<unsigned int>*);
+void addNumbers(vector<unsigned int>&, vector<unsigned int>&, vector<unsigned int>&);
 
 int primeP;
 int pDabble;
@@ -46,9 +46,9 @@ int main(int argc, char* argv[])
         inputFile = argv[1];
     }
     primeP = 1;
-    vector<int> read; 
+    vector<int> read;
     pDabble = readPrevious(&read,inputFile.c_str());
-    printHex(&read,"result");
+    // printHex(&read,"result");
     vector<int>::reverse_iterator itr = read.rbegin();
     vector<unsigned int> decimalVector;
     while(itr != read.rend())
@@ -61,17 +61,22 @@ int main(int argc, char* argv[])
         // cout << "out" << dec << setw(8) << setfill('0') << i << endl;
         decimalVector.push_back(i);
     }
-    cout << "result:";
-    vector<unsigned int>::iterator itr2 = decimalVector.begin();
-    while (itr2!= decimalVector.end())
-    {
-        cout << dec << setw(8) << setfill('0') << *itr2++; 
-    }
+    // cout << "result:";
+    // vector<unsigned int>::iterator itr2 = decimalVector.begin();
+    // while (itr2!= decimalVector.end())
+    // {
+    //     cout << dec << setw(8) << setfill('0') << *itr2++;
+    // }
     cout << endl;
     getDecimalVector(&read,&decimalVector);
     cout << "result:";
     printDecimalVector(&decimalVector);
     cout << endl;
+    vector<unsigned int> result;
+    cout<< "processing addition" << endl;
+    addNumbers(decimalVector,decimalVector,result);
+    printDecimalVector(&result);
+    cout<< "Exiting Program" << endl;
     // cout<<"My result1:" << numStream1.str() <<endl;
     return 0;
 }
@@ -170,7 +175,17 @@ inline void printDecimalVector(vector<unsigned int>* input)
     }
  }
 
- void addNumbers(vector<unsigned int>* num1, vector<unsigned int>* num2, vector<unsigned int>* result)
+ void addNumbers(vector<unsigned int>& num1, vector<unsigned int>& num2, vector<unsigned int>& result)
  {
     cout<< "This function is possible";
+    result.assign(num1.size(),0);
+    int maxSize = result.size();
+    cout << "size: " << maxSize << endl;
+    #pragma omp parallel for
+    for (int i = 0; i < maxSize; i++)
+    {
+        cout << i << endl;
+        result[i] = num1[i] + num2[i];
+    }
+    // printDecimalVector(&result);
  }
