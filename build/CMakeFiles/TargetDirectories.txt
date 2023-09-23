@@ -1,4 +1,0 @@
-/home/it/prime/primeapp/build/CMakeFiles/edit_cache.dir
-/home/it/prime/primeapp/build/CMakeFiles/rebuild_cache.dir
-/home/it/prime/primeapp/build/CMakeFiles/primeArray.dir
-/home/it/prime/primeapp/build/CMakeFiles/mprint.dir

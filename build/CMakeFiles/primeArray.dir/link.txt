@@ -1,1 +1,0 @@
-/usr/bin/c++   -mcmodel=medium -std=c++14 -pthread -O3 -fopenmp -g   CMakeFiles/primeArray.dir/main.cc.o CMakeFiles/primeArray.dir/vecutil.cc.o  -o primeArray -rdynamic 

@@ -1,0 +1,218 @@
+// Copyright [2018] by Muhammad Ahsan
+#include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <fstream>
+#include <chrono>
+#include <iomanip>
+#include <algorithm>
+#include <iterator>
+#include "vecutil.hh"
+#include "primitive.hh"
+#include "ntt.hh"
+#include <omp.h>
+
+
+using namespace std;
+using namespace std::chrono;
+
+
+void msg1()
+{
+  cout << "This is the msg" << endl;
+  return;
+}
+
+int* mod = NULL;
+int* invmod = NULL;
+int modNum = -1;
+int root = -1;
+int invRoot = -1;
+int rootLength = -1;
+int invRootLength = -1;
+
+int processModulo(int length, int modulo, int unity)
+{
+  cout << "initialzing ... " << endl;
+  processNumber(modulo);
+  int unityOrder = isRoot(unity);
+  cout << "unity Order: " << unityOrder << endl;
+  modNum = modulo;
+  root = unity;
+  
+  rootLength = unityOrder;
+  cout << "inv Root: " ;
+  invRoot = findInvRoot();
+  cout << invRoot << endl;
+  invRootLength = findInvLength();
+  cout << "inv Length: ";
+  cout << invRootLength << endl;
+
+  //exit(0);
+  
+  if (length > unityOrder) {
+    return -1;
+  }
+
+  mod = new int[unityOrder];
+  memset(mod, 0, unityOrder*sizeof(int));
+  cout << "done size" << endl;
+  invmod = new int[unityOrder*unityOrder];
+  
+  int* powers = new int[unityOrder];
+  //int maxPower = -1;
+
+  /*
+  cout << "calculating Powers: " << sizeof(long) << endl;
+  
+  for (size_t row = 0;row < unityOrder; row++) {
+    size_t rowNum = row*unityOrder;
+    for (size_t col = 0; col < unityOrder; col++) {
+      long pow = row*col;
+      powers[rowNum+col] = pow>unityOrder?pow%unityOrder:pow;
+      //maxPower = maxPower<powers[rowNum+col]?powers[rowNum+col]:maxPower;
+      //cout << "\r" << row << "//" << col << flush;
+    }
+  }
+
+  cout << "Powers Calculated " << endl;
+  */
+  
+  int maxPower = unityOrder;
+  int* modPower = new int[maxPower];
+  memset(modPower, 0, maxPower*sizeof(int));
+  //int* invmodPower = new int[maxPower];
+  modPower[0] = 1;
+  //invmodPower[0] = 1;
+  for (long i = 1; i < maxPower; i++) {    
+    modPower[i] = (modPower[i-1]*unity)%modulo;
+    //invmodPower[i] = (invmodPower[i-1]*invRoot)%modulo;
+    //cout << modPower[i] << "//" << modPower[i-1] << endl;
+    //cout << i << endl;
+  }
+
+  cout << "Modes Calculated " << endl;
+  size_t pow;
+  for (size_t row = 0; row < unityOrder; row++) {
+    size_t rowNum = row*unityOrder;
+    for (size_t col = 0; col < unityOrder; col++) {
+      pow = (rowNum + col)%rootLength;
+      mod[col] = modPower[pow];
+      //invmod[rowNum + col] = invmodPower[powers[rowNum + col]];
+      //cout << "\r" << row << "/" << col << ":" << pow <<flush;
+    }
+    printf("\r%10ld", row);
+  }
+
+  delete[] powers;
+  cout << "FFT matrix Created " << endl;
+  return 1;
+}
+
+int findInvRoot()
+{
+  return inverse(root);
+}
+
+int findInvLength()
+{
+  return inverse(rootLength);
+}
+
+void printModMatrix()
+{
+  cout << endl;
+  for (int row = 0; row < rootLength; row++) {
+    int rowNum = row*rootLength;
+    cout << "Row(" << setw(3) << row << "):";
+    for (int col = 0; col < rootLength; col++) {
+      cout << setw(3) << " " << setw(3) << mod[rowNum + col];
+    }
+    cout << endl;
+  }
+}
+
+void printInvModMatrix()
+{
+  cout << endl;
+  for (int row = 0; row < rootLength; row++) {
+    int rowNum = row*rootLength;
+    cout << "Row(" << setw(3) << row << "):";
+    for (int col = 0; col < rootLength; col++) {
+      cout << setw(3) << " " << setw(3) << invmod[rowNum + col];
+    }
+    cout << endl;
+  }
+}
+
+
+int* execNTT(int* input, int length)
+{
+  int* inputNTT = new int[rootLength];
+  int* output = new int[rootLength];
+  int i = 0;
+  memset(inputNTT, 0, rootLength*sizeof(int));   
+  while (length > 0) {
+    inputNTT[i++] = input[length-1];
+    length--;
+  }
+  int reduceVar = 0;
+  for (int row = 0; row < rootLength; row++) {
+    int rowNum = row*rootLength;
+    output[row] = 0;
+    reduceVar = 0;
+#pragma omp paralle for reduction(+:reduceVar)
+    for (int col = 0; col < rootLength; col++) {
+      //output[row] += mod[rowNum+col]*inputNTT[col];
+      reduceVar = (mod[rowNum+col]*inputNTT[col] + reduceVar)%modNum;
+    }
+    output[row] = reduceVar;
+    output[row] = output[row]%modNum;
+    //cout << setw(3) <<  " " << setw(3) << output[row];
+  }
+  //cout << endl;
+  return output;
+}
+
+int* execInvNTT(int* input)
+{
+  int* output = new int[rootLength];
+
+  memset(output,0,rootLength*sizeof(int));
+  cout << "modnum" << modNum << endl;
+  cout << "root" << root << endl;
+  cout << "rootlength" << rootLength <<endl;
+  cout << "invroot" << invRoot << endl;
+  cout << "invrootlength" << invRootLength << endl;
+  //printInvModMatrix();
+  
+  //cout << endl;
+  int reduceVar = 0;
+  for (int row = 0; row < rootLength; row++) {
+    int rowNum = row*rootLength;
+    //output[row] = 0;
+    reduceVar = 0;
+#pragma omp parallel for reduction(+:reduceVar)
+    for (int col = 0; col < rootLength; col++) {
+      reduceVar = (invmod[rowNum+col]*input[col] + reduceVar)%modNum;
+      //output[row] = output[row]%modNum;
+    }
+    output[row] = (invRootLength*reduceVar)%modNum;
+    //cout << setw(3) <<  " " << setw(3) << output[row];
+  }
+  //cout << endl;
+  return output;
+}
+
+int* generateNumber(int* input)
+{
+  int num = 0;
+  int mul = 1;
+  for (int i = 0; i < rootLength; i++,mul*=10) {
+    num+= input[i]*mul;
+  }
+  //cout << num << endl;
+  int* output = new int[1];
+  output[0] = num;
+  return output;
+}
