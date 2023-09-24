@@ -13,11 +13,11 @@
 #include <map>
 #include <climits>
 #include <cmath>
-//#include <omp.h>
+#include <omp.h>
 #include <csignal>
 #include <unistd.h>
 
-#include "vecutil.hh"
+// #include "vecutil.hh"
 
 using namespace std;
 using namespace std::chrono;
@@ -48,35 +48,16 @@ int main(int argc, char* argv[])
     primeP = 1;
     vector<int> read;
     pDabble = readPrevious(&read,inputFile.c_str());
-    // printHex(&read,"result");
-    vector<int>::reverse_iterator itr = read.rbegin();
     vector<unsigned int> decimalVector;
-    while(itr != read.rend())
-    {
-        stringstream numStream1;
-        numStream1<<hex<<setw(8)<<setfill('0')<<*itr++;
-        // cout << numStream1.str() << endl;
-        unsigned int i;
-        i = stoul(numStream1.str(),nullptr,10);
-        // cout << "out" << dec << setw(8) << setfill('0') << i << endl;
-        decimalVector.push_back(i);
-    }
-    // cout << "result:";
-    // vector<unsigned int>::iterator itr2 = decimalVector.begin();
-    // while (itr2!= decimalVector.end())
-    // {
-    //     cout << dec << setw(8) << setfill('0') << *itr2++;
-    // }
-    cout << endl;
     getDecimalVector(&read,&decimalVector);
-    cout << "result:";
-    printDecimalVector(&decimalVector);
-    cout << endl;
+    // printDecimalVector(&decimalVector);
     vector<unsigned int> result;
-    cout<< "processing addition" << endl;
+    result.assign(decimalVector.size(),0);
+    for (int i = 0; i < 50000;i++) {
     addNumbers(decimalVector,decimalVector,result);
-    printDecimalVector(&result);
-    cout<< "Exiting Program" << endl;
+    }
+    // printDecimalVector(&result);
+    cout<< endl;
     // cout<<"My result1:" << numStream1.str() <<endl;
     return 0;
 }
@@ -177,15 +158,25 @@ inline void printDecimalVector(vector<unsigned int>* input)
 
  void addNumbers(vector<unsigned int>& num1, vector<unsigned int>& num2, vector<unsigned int>& result)
  {
-    cout<< "This function is possible";
-    result.assign(num1.size(),0);
+    // result.assign(num1.size(),0);
     int maxSize = result.size();
-    cout << "size: " << maxSize << endl;
-    #pragma omp parallel for
-    for (int i = 0; i < maxSize; i++)
+    // cout << "size: " << maxSize << endl;
+    int i;
+    // omp_set_num_threads(4);
+       
+    // #pragma omp parallel for 
+    // for (i = 0; i < maxSize; i++)
+    // {
+    //     // cout << i << endl;
+    //     result[i] = num1[i] + num2[i];
+    // }
+
+
+    int tid;
+    #pragma omp parallel num_threads(maxSize)
     {
-        cout << i << endl;
-        result[i] = num1[i] + num2[i];
+      tid = omp_get_thread_num();
+      result[tid] = num1[tid] + num2[tid];
     }
     // printDecimalVector(&result);
  }
