@@ -1,3 +1,9 @@
+// 24-September-2023
+// updated version using array for accelerating with nvidia/openmp
+// trying to copy the python function provided by the following website
+// https://www.nayuki.io/res/number-theoretic-transform-integer-dft/numbertheoretictransform.py
+// https://www.nayuki.io/page/number-theoretic-transform-integer-dft
+
 #include <iostream>
 #include <iomanip>
 #include <vector>
@@ -17,25 +23,29 @@
 #include <csignal>
 #include <unistd.h>
 
-// #include "vecutil.hh"
+#include "veclibv2.hh"
 
 using namespace std;
 using namespace std::chrono;
 
-int readPrevious(vector<int>*, string);
-void printHex(vector<int>*);
-void printHex(vector<int>*, const char*);
-void printHexFile(vector<int>*, const char*);
-void getDecimalVector(vector<int>*,vector<unsigned int>*);
-void printDecimalVectorFile(vector<unsigned int>*,const char*);
-void printDecimalVector(vector<unsigned int>*);
-void addNumbers(vector<unsigned int>&, vector<unsigned int>&, vector<unsigned int>&);
+int find_modulus(int ArrayLength, int MaxElement);
+int maxof(int,int);
+bool isprime(int);
 
 int primeP;
 int pDabble;
 
 int main(int argc, char* argv[])
 {
+    cout << "size of int: " << sizeof(int) << endl;
+    cout << "max of int: " << INT_MAX << endl;
+
+    cout << "size of long: " << sizeof(long) << endl;
+    cout << "max of long: " << LONG_MAX << endl;
+
+    cout << "size of size_t: " << sizeof(size_t) << endl;
+    cout << "max of size_t: " << SIZE_MAX << endl;
+
     string outputFile="outputFile.txt";
     string inputFile;
     if (argc == 1) {
@@ -53,130 +63,75 @@ int main(int argc, char* argv[])
     // printDecimalVector(&decimalVector);
     vector<unsigned int> result;
     result.assign(decimalVector.size(),0);
-    for (int i = 0; i < 50000;i++) {
-    addNumbers(decimalVector,decimalVector,result);
-    }
     // printDecimalVector(&result);
     cout<< endl;
-    // cout<<"My result1:" << numStream1.str() <<endl;
+
+    //int n = 127;
+    pDabble = INT_MAX;
+    if (isprime(pDabble))
+    {
+      cout << pDabble << " is prime" << endl;
+    }
+    else
+    {
+      cout << pDabble << " is not prime" << endl;
+    }
+
+    cout << "Modulus is: " << find_modulus(decimalVector.size(),1) << endl;
+
+    auto timePrint = system_clock::now();
+    time_t timePrint_t = system_clock::to_time_t(timePrint);
+    cout << ctime(&timePrint_t) << endl;
     return 0;
 }
 
 
-int readPrevious(vector<int>* output, string file) {
-  int outPrime = 0;
-  ifstream infile(file.c_str(),std::ios::in);
-  if(!infile) {
-    cout <<"Unable to read file!!!" << file << endl;
-    exit(0);
-  }
-  string data,input;
-  try {
-    getline(infile, input);
-    getline(infile, data);
-    outPrime = atoi(input.c_str());
-    size_t sTotal = data.size() - 1 ;
-    //cout << data << endl;
-    //for_each(data.begin(), data.end(), [](auto& x){x=x-0X30;});
-    for(int i = sTotal;i > 0;) {
-      int buf[8] = {0};
-      buf[0] = ((int)data[i--]<<0)&0X0000000F;
-      buf[1] = ((int)data[i--]<<4)&0X000000F0;
-      buf[2] = ((int)data[i--]<<8)&0X00000F00;
-      buf[3] = ((int)data[i--]<<12)&0X0000F000;
-      buf[4] = ((int)data[i--]<<16)&0X000F0000;
-      buf[5] = ((int)data[i--]<<20)&0X00F00000;
-      buf[6] = ((int)data[i--]<<24)&0X0F000000;
-      buf[7] = ((int)data[i--]<<28)&0XF0000000;
-      output->push_back(buf[0]|buf[1]|buf[2]|buf[3]|buf[4]|buf[5]|buf[6]|buf[7]);
-    }
-  } catch(std::exception& e) {
-    cout <<"Unable to read file" << file <<endl;
-    exit(0);
-  }
-  return outPrime;
-}
-
-inline void printHex(vector<int>* input) {
-  vector<int>::reverse_iterator itr = input->rbegin();
-  while (itr != input->rend()) {
-    cout <<hex << setw(8) << setfill('0') << *itr++;
-  }
-  cout <<endl;
-}
-
-inline void printHex(vector<int>* input, const char* str) {
-  cout <<str <<":";
-  printHex(input);
-}
-
-inline void printHexFile(vector<int>* input, const char* str) {
-  ofstream inFile(str, std::ios::out);
-  vector<int>::reverse_iterator itr = input->rbegin();
-  while (itr != input->rend()) {
-    inFile << hex <<setw(8) <<setfill('0') << *itr++;
-  }
-  inFile.close();
-}
-
-inline void printDecimalVector(vector<unsigned int>* input)
+ int find_modulus(int ArrayLength, int MaxElement)
  {
-    vector<unsigned int>::iterator itr = input->begin();
-    while (itr!=input->end())
+  // N is the modulus, N must be prime
+  // n is array length
+  // m is maximum element
+  // general approach to avoid any overflow in to set modulus is
+  // N = n*m^2 + 1;
+  // will return -1 if found any fault
+  if (ArrayLength<1 || MaxElement < 1)
+  {
+    return -1;
+  }
+  int startingPoint = ArrayLength -1 + MaxElement;
+  while(startingPoint<=INT_MAX)
+  {
+    int n=startingPoint*ArrayLength + 1;
+    if (isprime(n))
     {
-        cout << dec << setw(8) << setfill('0') << *itr++;
+      return n;
     }
-    return;
+    startingPoint++;
+  }
+  return -1;
  }
 
- inline void printDecimalVectorFile(vector<unsigned int>* input, const char* str)
+ int maxof(int i, int j)
  {
-    ofstream outFile(str,std::ios::out);
-    vector<unsigned int>::iterator itr = input->begin();
-    while (itr!=input->end())
-    {
-        outFile << dec << setw(8) << setfill('0') << *itr++;
-    }
-    return;
+  if (i>j)
+  {
+    return i;
+  }
+  return j;
  }
 
- inline void getDecimalVector(vector<int>* hexVector, vector<unsigned int>* decVector)
- {
-    decVector->clear();
-    vector<int>::reverse_iterator itr = hexVector->rbegin();
-    while(itr != hexVector->rend())
+bool isprime(int p)
+{
+  int p2=p/2;
+  int i = 2;
+  while (i<=p2)
+  {
+    if (p%i==0)
     {
-        stringstream numStream1;
-        numStream1<<hex<<setw(8)<<setfill('0')<<*itr++;
-        // cout << numStream1.str() << endl;
-        unsigned int i;
-        i = stoul(numStream1.str(),nullptr,10);
-        // cout << "out" << dec << setw(8) << setfill('0') << i << endl;
-        decVector->push_back(i);
+      return false;
+      break;
     }
- }
-
- void addNumbers(vector<unsigned int>& num1, vector<unsigned int>& num2, vector<unsigned int>& result)
- {
-    // result.assign(num1.size(),0);
-    int maxSize = result.size();
-    // cout << "size: " << maxSize << endl;
-    int i;
-    // omp_set_num_threads(4);
-       
-    // #pragma omp parallel for 
-    // for (i = 0; i < maxSize; i++)
-    // {
-    //     // cout << i << endl;
-    //     result[i] = num1[i] + num2[i];
-    // }
-
-
-    int tid;
-    #pragma omp parallel num_threads(maxSize)
-    {
-      tid = omp_get_thread_num();
-      result[tid] = num1[tid] + num2[tid];
-    }
-    // printDecimalVector(&result);
- }
+    i++;
+  }
+  return true;
+}
