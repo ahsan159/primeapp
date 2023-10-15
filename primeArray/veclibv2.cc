@@ -100,6 +100,17 @@ inline void printDecimalVector(vector<unsigned int>* input)
     return;
  }
 
+void printDecimalVectorFileComma(vector<unsigned int>* input, const char* str)
+ {
+    ofstream outFile(str,std::ios::out);
+    vector<unsigned int>::iterator itr = input->begin();
+    while (itr!=input->end())
+    {
+        outFile << dec << setw(8) << setfill('0') << *itr++ << ",";
+    }
+    return;
+ }
+
 void getDecimalVector(vector<int>* hexVector, vector<unsigned int>* decVector)
  {
     decVector->clear();

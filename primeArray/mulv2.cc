@@ -2,6 +2,7 @@
 // updated version using array for accelerating with nvidia/openmp
 // trying to copy the python function provided by the following website
 // https://www.nayuki.io/res/number-theoretic-transform-integer-dft/numbertheoretictransform.py
+// https://www.nayuki.io/res/number-theoretic-transform-integer-dft/numbertheoretictransform.js
 // https://www.nayuki.io/page/number-theoretic-transform-integer-dft
 
 #include <iostream>
@@ -29,8 +30,13 @@ using namespace std;
 using namespace std::chrono;
 
 int find_modulus(int ArrayLength, int MaxElement);
+unsigned int find_primitive_root(int degree, int totient, int modulo);
+unsigned int find_generator(int totient, int modulo);
+bool is_primitive_root(int value, int degree, int modulo);
 int maxof(int,int);
 bool isprime(int);
+unsigned int max_in_array(vector<unsigned int>& array);
+vector<unsigned int> unique_prime_factors(unsigned int value);
 
 int primeP;
 int pDabble;
@@ -65,9 +71,10 @@ int main(int argc, char* argv[])
     result.assign(decimalVector.size(),0);
     // printDecimalVector(&result);
     cout<< endl;
-
+    // printDecimalVectorFileComma(&decimalVector,"commaFile.txt");
     //int n = 127;
-    pDabble = INT_MAX;
+    // pDabble = INT_MAX;
+    cout << "vector length: " << decimalVector.size() << endl;
     if (isprime(pDabble))
     {
       cout << pDabble << " is prime" << endl;
@@ -77,7 +84,18 @@ int main(int argc, char* argv[])
       cout << pDabble << " is not prime" << endl;
     }
 
-    cout << "Modulus is: " << find_modulus(decimalVector.size(),1) << endl;
+    int mod = find_modulus(decimalVector.size(),max_in_array(decimalVector) );
+
+    cout << "Modulus is: " << mod << endl;
+    cout << "Max is: " << max_in_array(decimalVector) << endl;
+    if (isprime(mod))
+    {
+      cout <<  mod << " is prime" << endl;
+    }
+    else
+    {
+      cout << mod << " is not prime" << endl;
+    }
 
     auto timePrint = system_clock::now();
     time_t timePrint_t = system_clock::to_time_t(timePrint);
@@ -98,15 +116,17 @@ int main(int argc, char* argv[])
   {
     return -1;
   }
-  int startingPoint = ArrayLength -1 + MaxElement;
-  while(startingPoint<=INT_MAX)
+  int startingPoint = (ArrayLength -1 + MaxElement-1)/ArrayLength;
+  if (startingPoint<1)
   {
-    int n=startingPoint*ArrayLength + 1;
+    startingPoint = 1;
+  }
+  for (int i = 1, n = startingPoint*ArrayLength+1; i <= INT_MAX;i++,n+=ArrayLength)
+  {
     if (isprime(n))
     {
       return n;
     }
-    startingPoint++;
   }
   return -1;
  }
@@ -135,3 +155,55 @@ bool isprime(int p)
   }
   return true;
 }
+
+unsigned int max_in_array(vector<unsigned int>& array)
+{
+  unsigned int starting_point = 0;
+  vector<unsigned int>::iterator itr = array.begin();
+  unsigned int max = starting_point;
+  while (itr != array.end())
+  {
+    if (max<*itr)
+    {
+      max = *itr;
+    }
+    itr++;
+  }
+  return max;
+}
+
+unsigned int find_primitive_root(int degree, int totient, int modulo)
+{
+  // degree in length of array
+  // totient in modulus -1 
+  // modulo is modulus
+}
+
+unsigned int find_generator(int totient, int modulo)
+{
+  // totient is modulo - 1
+
+  // returnig -1 will represent error
+  if (! (1 <=totient && totient<modulo))
+  {
+    return -1;
+  }
+  for (unsigned int i = 1; i < modulo; i++)
+  {
+    if (is_primitive_root(i,totient,modulo))
+    {
+      return i;
+    }
+  }
+  // if program reached this point 
+  // it means no generator functions are found
+  return -1;
+}
+
+bool is_primitive_root(int value, int degree, int modulo)
+{
+  
+}
+
+vector<unsigned int> unique_prime_factors(unsigned int value)
+{}
