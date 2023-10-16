@@ -136,6 +136,11 @@ int main(int argc, char *argv[])
   cout << "Subtraction Result is: " << endl;
   printDecimalVector(&sub);
   cout << endl;
+  // below test proves that using double for guessing of 
+  // quotient in divison will cause large errors
+  // double a = 170141183460469231731687303715884105727;
+  // double d = 1.0;
+  // cout << setprecision(100) << d / a << endl;
   return 0;
 }
 
@@ -387,6 +392,7 @@ vector<unsigned int> SubtractArray(vector<unsigned int> &a, vector<unsigned int>
 vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a)
 {
   vector<unsigned int> result;
+  // step 1 make nominator larger than denominator
   result.insert(result.begin(), a.size(), 0);
   if (*(a.begin()) >= 10000000)
   {
@@ -403,25 +409,36 @@ vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a)
   cout << "test" << endl;
   printDecimalVector(&a);
   cout << endl;
+  // variable i presents the precision required
+  // in our case precision will be 100 digits
   int i = 1;
   while (i++ <= 100)
   {
+    // quot will be current decimal
     unsigned int quot = 0;
     while (CompareArray(result, a) == 1)
     {
+      // keep comparing and subtracting unless nominator is
+      // smaller that denominator
+
       // cout << endl;
       // printDecimalVector(&result);
       // cout << endl;
+
       result = SubtractArray(result, a);
+
       // cout << endl;
       // printDecimalVector(&result);
       // cout << endl;
       quot++;
     }
     cout << quot;
+    // increment denominator by appending zero and calculate next
+    // quotient digit
     digitShift(result);
   }
   cout << endl;
+  // current quotient is not returned
   return result;
 }
 
