@@ -41,6 +41,7 @@ unsigned int powMod(unsigned int, unsigned int, unsigned int);
 void digitShift(vector<unsigned int>&);
 int CompareArray(vector<unsigned int>& a, vector<unsigned int>& b);
 vector<unsigned int> AddArray(vector<unsigned int>&a, vector<unsigned int>&b);
+vector<unsigned int> SubtractArray(vector<unsigned int>&a, vector<unsigned int>&b);
 vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a);
 
 int primeP;
@@ -115,7 +116,7 @@ int main(int argc, char* argv[])
 
     vector<unsigned int> vector2 = decimalVector;
 
-    // digitShift(decimalVector);
+    digitShift(decimalVector);
 
     cout << "Vector is: " << endl;
     printDecimalVector(&decimalVector);
@@ -129,6 +130,11 @@ int main(int argc, char* argv[])
 
     MultiplicativeInverse(decimalVector);
 
+    // digitShift(decimalVector);
+    vector<unsigned int> sub = SubtractArray(addr, decimalVector);
+    cout << "Subtraction Result is: " << endl;
+    printDecimalVector(&sub);
+    cout << endl;
     return 0;
 }
 
@@ -330,6 +336,47 @@ vector<unsigned int> AddArray(vector<unsigned int>&a, vector<unsigned int>&b)
   {
     result.insert(result.begin(), carry);
   }
+  return result;
+}
+
+vector<unsigned int> SubtractArray(vector<unsigned int>&a, vector<unsigned int>&b)
+{
+  // this will implement subtraction using complementry method
+  // this requires b << a
+  vector<unsigned int> bCopy = b; // make a copy for complement
+  while (bCopy.size() < a.size())
+  {
+    bCopy.insert(bCopy.begin(),0);
+  }
+  // complement individual decimals
+  vector<unsigned int>::iterator itr = bCopy.begin();
+  while (itr!=bCopy.end())
+  {
+    *itr = 99999999-*itr;
+    itr++;
+  }
+  // perform addition
+  vector<unsigned int> result = AddArray(a,bCopy);
+
+  // get carry and add in to last integer
+  string str = to_string(*(result.begin()));
+  int size = str.size()-1;
+  int m10 = 1;
+  for (int i = 0; i < size;i++)
+  {
+    m10 = m10*10;
+  }
+  *(result.begin()) = *(result.begin())%m10;
+  unsigned int carry = 1;
+  vector<unsigned int>::reverse_iterator ritr = result.rbegin();
+  while (ritr!=result.rend() && carry != 0)
+  {
+    *ritr = *ritr + carry;
+    carry = *ritr / 100000000;
+    *ritr = *ritr % 100000000;
+    ritr++;
+  }
+
   return result;
 }
 
