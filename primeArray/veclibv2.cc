@@ -79,7 +79,7 @@ inline void printHexFile(vector<int>* input, const char* str) {
   inFile.close();
 }
 
-inline void printDecimalVector(vector<unsigned int>* input)
+void printDecimalVector(vector<unsigned int>* input)
  {
     vector<unsigned int>::iterator itr = input->begin();
     while (itr!=input->end())

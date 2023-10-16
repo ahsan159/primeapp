@@ -37,6 +37,11 @@ int maxof(int,int);
 bool isprime(int);
 unsigned int max_in_array(vector<unsigned int>& array);
 vector<unsigned int> unique_prime_factors(unsigned int value);
+unsigned int powMod(unsigned int, unsigned int, unsigned int);
+void digitShift(vector<unsigned int>&);
+int CompareArray(vector<unsigned int>& a, vector<unsigned int>& b);
+vector<unsigned int> AddArray(vector<unsigned int>&a, vector<unsigned int>&b);
+vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a);
 
 int primeP;
 int pDabble;
@@ -51,6 +56,9 @@ int main(int argc, char* argv[])
 
     cout << "size of size_t: " << sizeof(size_t) << endl;
     cout << "max of size_t: " << SIZE_MAX << endl;
+
+    cout << "size of double: " << sizeof(double) << endl;
+    cout << "max of double: " << __DBL_MAX__ << endl;
 
     string outputFile="outputFile.txt";
     string inputFile;
@@ -100,6 +108,27 @@ int main(int argc, char* argv[])
     auto timePrint = system_clock::now();
     time_t timePrint_t = system_clock::to_time_t(timePrint);
     cout << ctime(&timePrint_t) << endl;
+
+    cout << "Vector is: " << endl;
+    printDecimalVector(&decimalVector);
+    cout << endl;
+
+    vector<unsigned int> vector2 = decimalVector;
+
+    // digitShift(decimalVector);
+
+    cout << "Vector is: " << endl;
+    printDecimalVector(&decimalVector);
+    cout << endl;
+
+    cout << "Comparison is: " << CompareArray(decimalVector,vector2) << endl;
+    vector<unsigned int> addr = AddArray(decimalVector,decimalVector);
+    cout << "Addition Result is: " << endl;
+    printDecimalVector(&addr);
+    cout << endl;
+
+    MultiplicativeInverse(decimalVector);
+
     return 0;
 }
 
@@ -207,3 +236,148 @@ bool is_primitive_root(int value, int degree, int modulo)
 
 vector<unsigned int> unique_prime_factors(unsigned int value)
 {}
+
+void digitShift(vector<unsigned int>& array)
+{
+    vector<unsigned int>::reverse_iterator itr = array.rbegin();
+    unsigned int carry = 0;
+    while (itr != array.rend())
+    {
+      // real shifting operation by multiplication and remainder
+      // cout << *itr << endl;
+      unsigned int multiply = *itr*10;
+      *itr = multiply%100000000 + carry;
+      carry = multiply/100000000;
+      // cout << *itr << endl;
+      // cout << carry << endl;
+      itr++;
+    }
+    if (carry!=0)
+    {
+      // array.push_back(0);
+    array.insert(array.begin(),carry);
+    }
+}
+
+int CompareArray(vector<unsigned int>& a, vector<unsigned int>& b)
+{
+  // return 1 if a>>b
+  // return -1 if a<<b
+  // return 0 if a==b
+  // this requires clean array i.e. first elements must not be 
+  // zeros
+  if (a.size() > b.size())
+  {
+    return 1;
+  }
+  else if (a.size() < b.size())
+  {
+    return -1;
+  }
+  vector<unsigned int>::iterator itra = a.begin();
+  vector<unsigned int>::iterator itrb = b.begin();
+  while (itra!=a.end() && itrb!=b.end())
+  {
+    if (*itra > *itrb)
+    {
+      return 1;
+    }
+    else if (*itra < *itrb)
+    {
+      return -1;
+    }
+    itra++;
+    itrb++;
+  }
+  return 0;
+}
+
+vector<unsigned int> AddArray(vector<unsigned int>&a, vector<unsigned int>&b)
+{
+  vector<unsigned int> result;
+  vector<unsigned int> larger = b;
+  vector<unsigned int> smaller = a;
+  if(a.size() > b.size())
+  {
+    larger = a;
+    smaller = b;
+  }
+  unsigned int carry = 0;
+  vector<unsigned int>::reverse_iterator itrl = larger.rbegin();
+  vector<unsigned int>::reverse_iterator itrs = smaller.rbegin();
+  // first step add two array until smaller reach its limit
+  while (itrs != smaller.rend())
+  {
+    unsigned int r = *itrl + *itrs  + carry;
+    carry = r/100000000;
+    r = r%100000000;
+    result.insert(result.begin(),r);
+    itrl++;
+    itrs++;
+  }
+  // add remaining larger array
+  while(itrl!=larger.rend())
+  {
+    unsigned int r = *itrl + *itrs  + carry;
+    carry = r/100000000;
+    r = r%100000000;
+    result.insert(result.begin(),r);
+    itrl++;
+  }
+  // double check carry if two array are of same size and are causing 
+  // carry overflow
+  if (carry!=0)
+  {
+    result.insert(result.begin(), carry);
+  }
+  return result;
+}
+
+vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a)
+{
+  vector<unsigned int> result;
+  result.insert(result.begin(),a.size(),0);
+  if (*(a.begin()) >= 10000000)
+  {
+    result.insert(result.begin(),1);
+  }
+  else
+  {
+    *(result.begin()) = 1;
+    while (CompareArray(result,a)!=1)
+    {
+      digitShift(result);
+    }
+  }
+  cout << "test" << endl;
+  printDecimalVector(&result);
+  cout << endl;
+  return result;
+}
+
+unsigned int powMod(unsigned int x, unsigned int y, unsigned int m)
+ {
+     // implementation of x^y % m
+     // if return -1 then there is error
+     if (x < 0 || m <= 0)
+     {
+         return -1;
+     }
+     if (!((0 <= x) && (x < m)))
+     {
+        return -1;
+     }
+     unsigned int result = 1;
+     while (y != 0)
+     {
+         if ((y & 1) != 0)
+         {
+             result = result * x;
+             result = result % m;
+         }
+         x = x * x;
+         x = x % m;
+         y = y >> 1;
+     }
+     return result;
+}
