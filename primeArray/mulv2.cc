@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
   result.assign(decimalVector.size(), 0);
   // printDecimalVector(&result);
   cout << endl;
-  // printDecimalVectorFileComma(&decimalVector,"commaFile.txt");
+  printDecimalVectorFileComma(&decimalVector,"commaFile.txt");
   // int n = 127;
   // pDabble = INT_MAX;
   cout << "vector length: " << decimalVector.size() << endl;
@@ -106,6 +106,11 @@ int main(int argc, char *argv[])
   {
     cout << mod << " is not prime" << endl;
   }
+
+  // unsigned int root = find_primitive_root(decimalVector.size(),mod-1,mod);
+  unsigned int root = find_primitive_root(5,84105730,84105731);
+  cout << "Primitive root is: " << endl;
+  cout << root << endl;
 
   auto timePrint = system_clock::now();
   time_t timePrint_t = system_clock::to_time_t(timePrint);
@@ -215,23 +220,37 @@ unsigned int max_in_array(vector<unsigned int> &array)
 unsigned int find_primitive_root(int degree, int totient, int modulo)
 {
   // degree in length of array
-  // totient in modulus -1
+  // totient = modulus -1
   // modulo is modulus
+  if (!((0<=degree) && (degree<=totient) && (totient<modulo)))
+  {
+    return -1;
+  }
+  if (totient%degree != 0)
+  {
+    return -1;
+  }
+  unsigned int g = find_generator(totient,modulo);
+  cout << "generator " << g << endl;
+  return powMod(g,totient/degree,modulo);
 }
 
 unsigned int find_generator(int totient, int modulo)
 {
-  // totient is modulo - 1
+  // totient = modulo - 1
 
   // returnig -1 will represent error
   if (!(1 <= totient && totient < modulo))
   {
+    cout << "returning from generator" << endl;
     return -1;
   }
   for (unsigned int i = 1; i < modulo; i++)
   {
+    // cout << "testing proot" << i << endl;
     if (is_primitive_root(i, totient, modulo))
     {
+      cout << "primitive root" << i << endl;
       return i;
     }
   }
@@ -242,10 +261,62 @@ unsigned int find_generator(int totient, int modulo)
 
 bool is_primitive_root(int value, int degree, int modulo)
 {
+  // check this function throughly again 17-oct-2023
+  bool result = false;
+  if (!((0 <= value) && (value < modulo)))
+  {
+    result = false;
+  }
+  if (!((1 <= degree) && (degree < modulo)))
+  {
+    result = false;
+  }
+  bool valueModulo = powMod(value,degree,modulo);
+  // bool valuePrime = false;
+  vector<unsigned int> uniqueFactors = unique_prime_factors(degree);
+  vector<unsigned int>::iterator itr = uniqueFactors.begin();
+  while (itr != uniqueFactors.end())
+  {
+    if (powMod(value,degree/(*itr),modulo)!=1)
+    {
+      result = true;
+    }
+    else
+    {
+      result = false;
+      break;
+    }
+    itr++;
+  }
+  return result&&valueModulo;
 }
 
 vector<unsigned int> unique_prime_factors(unsigned int value)
 {
+  vector<unsigned int> result;
+  unsigned int square_root = (int)sqrt((double)value);
+  result.push_back(-1);
+  if (value < 1)
+  {
+    return result;
+  }
+  for (int i = 2; i <= square_root; i++)
+  {
+    if (value%i == 0)
+    {
+      result.push_back(i);
+      while (value%i == 0)
+      {
+        value = value/i;
+      }
+      square_root = (int)sqrt((double)value);
+    }
+  }
+  if (value>1)
+  {
+    result.push_back(value);
+  }
+  return result;
 }
 
 void digitShift(vector<unsigned int> &array)
