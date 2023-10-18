@@ -107,8 +107,8 @@ int main(int argc, char *argv[])
     cout << mod << " is not prime" << endl;
   }
 
-  // unsigned int root = find_primitive_root(decimalVector.size(),mod-1,mod);
-  unsigned int root = find_primitive_root(5,84105730,84105731);
+  unsigned int root = find_primitive_root(decimalVector.size(),mod-1,mod);
+  // unsigned int root = find_primitive_root(5,84105730,84105731);
   cout << "Primitive root is: " << endl;
   cout << root << endl;
   cout << powMod(2,16821146,84105731)<<endl;
@@ -278,7 +278,7 @@ bool is_primitive_root(int value, int degree, int modulo)
     result = false;
   }
   bool valueModulo = powMod(value,degree,modulo)==1;
-  cout << "pmd " << valueModulo << endl;
+  //cout << "pmd " << valueModulo << endl;
   // bool valuePrime = false;
   vector<unsigned int> uniqueFactors = unique_prime_factors(degree);
   vector<unsigned int>::iterator itr = uniqueFactors.begin();
@@ -296,7 +296,7 @@ bool is_primitive_root(int value, int degree, int modulo)
     itr++;
   }
   // bool valueModulo = powMod(value,degree,modulo)==1;
-  cout << "upf " << result << endl;
+  //cout << "upf " << result << endl;
   return result&valueModulo;
 }
 
