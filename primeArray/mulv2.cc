@@ -111,36 +111,42 @@ int main(int argc, char *argv[])
   unsigned int root = find_primitive_root(5,84105730,84105731);
   cout << "Primitive root is: " << endl;
   cout << root << endl;
+  cout << powMod(2,16821146,84105731)<<endl;
+  cout << 67108864%mod << endl;
+  vector<unsigned int> upf = unique_prime_factors(84105730);
+  cout << endl;
+  copy(upf.begin(), upf.end(),ostream_iterator<unsigned int>(cout,"\t"));
+  cout << endl;
 
   auto timePrint = system_clock::now();
   time_t timePrint_t = system_clock::to_time_t(timePrint);
   cout << ctime(&timePrint_t) << endl;
 
-  cout << "Vector is: " << endl;
-  printDecimalVector(&decimalVector);
-  cout << endl;
+  // cout << "Vector is: " << endl;
+  // printDecimalVector(&decimalVector);
+  // cout << endl;
 
-  vector<unsigned int> vector2 = decimalVector;
-
-  digitShift(decimalVector);
-
-  cout << "Vector is: " << endl;
-  printDecimalVector(&decimalVector);
-  cout << endl;
-
-  cout << "Comparison is: " << CompareArray(decimalVector, vector2) << endl;
-  vector<unsigned int> addr = AddArray(decimalVector, decimalVector);
-  cout << "Addition Result is: " << endl;
-  printDecimalVector(&addr);
-  cout << endl;
-
-  MultiplicativeInverse(vector2);
+  // vector<unsigned int> vector2 = decimalVector;
 
   // digitShift(decimalVector);
-  vector<unsigned int> sub = SubtractArray(addr, decimalVector);
-  cout << "Subtraction Result is: " << endl;
-  printDecimalVector(&sub);
-  cout << endl;
+
+  // cout << "Vector is: " << endl;
+  // printDecimalVector(&decimalVector);
+  // cout << endl;
+
+  // cout << "Comparison is: " << CompareArray(decimalVector, vector2) << endl;
+  // vector<unsigned int> addr = AddArray(decimalVector, decimalVector);
+  // cout << "Addition Result is: " << endl;
+  // printDecimalVector(&addr);
+  // cout << endl;
+
+  //MultiplicativeInverse(vector2);
+
+  // digitShift(decimalVector);
+  // vector<unsigned int> sub = SubtractArray(addr, decimalVector);
+  // cout << "Subtraction Result is: " << endl;
+  // printDecimalVector(&sub);
+  // cout << endl;
   // below test proves that using double for guessing of 
   // quotient in divison will cause large errors
   // double a = 170141183460469231731687303715884105727;
@@ -247,7 +253,7 @@ unsigned int find_generator(int totient, int modulo)
   }
   for (unsigned int i = 1; i < modulo; i++)
   {
-    // cout << "testing proot" << i << endl;
+    cout << "testing proot" << i << endl;
     if (is_primitive_root(i, totient, modulo))
     {
       cout << "primitive root" << i << endl;
@@ -271,7 +277,8 @@ bool is_primitive_root(int value, int degree, int modulo)
   {
     result = false;
   }
-  bool valueModulo = powMod(value,degree,modulo);
+  bool valueModulo = powMod(value,degree,modulo)==1;
+  cout << "pmd " << valueModulo << endl;
   // bool valuePrime = false;
   vector<unsigned int> uniqueFactors = unique_prime_factors(degree);
   vector<unsigned int>::iterator itr = uniqueFactors.begin();
@@ -288,14 +295,16 @@ bool is_primitive_root(int value, int degree, int modulo)
     }
     itr++;
   }
-  return result&&valueModulo;
+  // bool valueModulo = powMod(value,degree,modulo)==1;
+  cout << "upf " << result << endl;
+  return result&valueModulo;
 }
 
 vector<unsigned int> unique_prime_factors(unsigned int value)
 {
   vector<unsigned int> result;
   unsigned int square_root = (int)sqrt((double)value);
-  result.push_back(-1);
+  // result.push_back(-1);
   if (value < 1)
   {
     return result;
@@ -477,9 +486,9 @@ vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a)
       digitShift(result);
     }
   }
-  cout << "test" << endl;
-  printDecimalVector(&a);
-  cout << endl;
+  // cout << "test" << endl;
+  // printDecimalVector(&a);
+  // cout << endl;
   // variable i presents the precision required
   // in our case precision will be 100 digits
   int i = 1;
@@ -517,25 +526,40 @@ unsigned int powMod(unsigned int x, unsigned int y, unsigned int m)
 {
   // implementation of x^y % m
   // if return -1 then there is error
-  if (x < 0 || m <= 0)
+  // cout << "here";
+  // cout << x<<"," << y << "," << m << endl;
+  if (y < 0 || m <= 0)
   {
     return -1;
   }
   if (!((0 <= x) && (x < m)))
   {
-    return -1;
+    // cout << "x:" << x << endl;
+    x = ((x%m)+m)%m;
+    // cout << "x:" << x << endl;
   }
-  unsigned int result = 1;
+  unsigned long result = 1;
+  int loop = 0;
   while (y != 0)
   {
     if ((y & 1) != 0)
     {
+      // cout << "r1: " << result << endl;
       result = result * x;
+      // cout << "r2: " << result << endl;
       result = result % m;
+      // cout << "r3: " << result << endl;
     }
-    x = x * x;
-    x = x % m;
+    //  cout << "r: " << result << endl;
+    //  cout << "x: " << x  <<endl;
+    unsigned long xbuf = x;
+    xbuf = xbuf*xbuf%m;
+    x = (unsigned int)xbuf;
+    //cout << "x: " << x  <<endl;
     y = y >> 1;
+    //cout << "y:" << y << endl;
+    //loop++;
   }
+  //cout << "result is: " << result << endl;
   return result;
 }
