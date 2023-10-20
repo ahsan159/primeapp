@@ -152,3 +152,22 @@ void getDecimalVector(vector<int>* hexVector, vector<unsigned int>* decVector)
     // printDecimalVector(&result);
  }
  
+ vector<unsigned int> rearrangeVector(vector<unsigned int> &a,int N)
+{
+  stringstream ss;
+  vector<unsigned int>::iterator itr = a.begin();
+  while (itr != a.end())
+  {
+    ss << setw(8) << setfill('0') << dec << *itr;
+    itr++;
+  }
+  string stringVector = ss.str();
+  //cout << "data :" <<stringVector << endl;
+  vector<unsigned int> rearrangedVector;
+  for (int i = 0; i < stringVector.length(); i+=N)
+  {
+    unsigned int ui = stoul(stringVector.substr(i,N),nullptr,10);
+    rearrangedVector.push_back(ui);
+  }
+  return rearrangedVector;
+}

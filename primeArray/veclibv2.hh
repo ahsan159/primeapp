@@ -31,3 +31,4 @@ void printDecimalVectorFile(vector<unsigned int>*,const char*);
 void printDecimalVectorFileComma(vector<unsigned int>*,const char*,int N = 8);
 void printDecimalVector(vector<unsigned int>*,int);
 void addNumbers(vector<unsigned int>&, vector<unsigned int>&, vector<unsigned int>&);
+vector<unsigned int> rearrangeVector(vector<unsigned int> &a,int N);

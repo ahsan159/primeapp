@@ -44,28 +44,8 @@ vector<unsigned int> AddArray(vector<unsigned int> &a, vector<unsigned int> &b);
 vector<unsigned int> SubtractArray(vector<unsigned int> &a, vector<unsigned int> &b);
 vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a);
 vector<unsigned int> ntt(vector<unsigned int>&,unsigned int, unsigned int);
-
-vector<unsigned int> rearrangeVector(vector<unsigned int> &a,int N);
-
-vector<unsigned int> rearrangeVector(vector<unsigned int> &a,int N)
-{
-  stringstream ss;
-  vector<unsigned int>::iterator itr = a.begin();
-  while (itr != a.end())
-  {
-    ss << setw(8) << setfill('0') << dec << *itr;
-    itr++;
-  }
-  string stringVector = ss.str();
-  //cout << "data :" <<stringVector << endl;
-  vector<unsigned int> rearrangedVector;
-  for (int i = 0; i < stringVector.length(); i+=N)
-  {
-    unsigned int ui = stoul(stringVector.substr(i,N),nullptr,10);
-    rearrangedVector.push_back(ui);
-  }
-  return rearrangedVector;
-}
+vector<unsigned int> intt(vector<unsigned int>&,unsigned int, unsigned int);
+unsigned int ModReciprocal(unsigned int x, unsigned int mod);
 
 int primeP;
 int pDabble;
@@ -155,10 +135,23 @@ int main(int argc, char *argv[])
   copy(upf.begin(), upf.end(),ostream_iterator<unsigned int>(cout,"\t"));
   cout << endl;
 
+  copy(rdecimalVector.begin(), rdecimalVector.end(),ostream_iterator<int>(cout,", "));
+  cout << endl;
+
   vector<unsigned int> result1 = ntt(rdecimalVector,root,mod);
   copy(result1.begin(), result1.end(),ostream_iterator<int>(cout,", "));
   cout << endl;
   cout << result1.size() << endl;
+
+  vector<unsigned int> result2 = intt(result1,root,mod);
+  copy(result2.begin(), result2.end(),ostream_iterator<int>(cout,", "));
+  cout << endl;
+
+  vector<unsigned int> result3 = ntt(result1,root,mod);
+  copy(result3.begin(), result3.end(),ostream_iterator<int>(cout,", "));
+  cout << endl;
+
+
   auto timePrint = system_clock::now();
   time_t timePrint_t = system_clock::to_time_t(timePrint);
   cout << ctime(&timePrint_t) << endl;
@@ -199,7 +192,7 @@ int main(int argc, char *argv[])
 vector<unsigned int> ntt(vector<unsigned int>& invector,unsigned int root, unsigned int modulo)
 {
   unsigned int len = invector.size();
-  cout << root  << "lend " << modulo << "len" << len << endl;
+  //cout << root  << "lend " << modulo << "len" << len << endl;
   vector<unsigned int> output;
   for (unsigned int i = 0; i < len; i++)
   {
@@ -213,6 +206,21 @@ vector<unsigned int> ntt(vector<unsigned int>& invector,unsigned int root, unsig
     output.push_back(sum);
   }
   return output;
+}
+
+vector<unsigned int> intt(vector<unsigned int>& invector, unsigned int root, unsigned int modulo)
+{
+  vector<unsigned int> it = ntt(invector,ModReciprocal(root,modulo),modulo);
+
+  //cout << ModReciprocal(root,modulo) << "aasdf";
+  copy(it.begin(), it.end(),ostream_iterator<int>(cout,", "));
+  cout << endl;
+  unsigned int scale = ModReciprocal(invector.size(), modulo);
+  for (int i = 0; i < it.size();  i++)
+  {
+    it[i] = (it[i] * scale) % modulo;
+  }
+  return it;
 }
 
 int find_modulus(int ArrayLength, int MaxElement)
@@ -622,4 +630,41 @@ unsigned int powMod(unsigned int x, unsigned int y, unsigned int m)
   }
   //cout << "result is: " << result << endl;
   return result;
+}
+
+unsigned int ModReciprocal(unsigned int x, unsigned int mod)
+{
+  if (!((0 <= x) && (x < mod)))
+  {
+    return -1;
+  }
+
+  // unsigned long x1 = x;
+  // unsigned long y = x1;
+  // x1 = mod;
+  // unsigned long a = 0;
+  // unsigned long b = 1;
+  // while (y != 0)
+  // {
+  //   unsigned long temp = a - x1 / y * b;
+  //   a = b;
+  //   b = temp;
+  //   temp = x1 % y;
+  //   x1 = y;
+  //   y = temp;
+  // }
+  // if (x1 == 1)
+  // {
+  //   return ((a % mod) + mod) % mod;
+  // }
+  for (unsigned int xinv = 1; xinv<mod;xinv++)
+  {
+    //cout << "inv" <<xinv<<"mod"<<(x*xinv)%mod << endl;
+      if((x*xinv)%mod == 1)
+      {
+        return xinv%mod;
+      }
+  }
+  //cout << "here"<< endl;
+  return -1;
 }
