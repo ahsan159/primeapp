@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
   //   cout << pDabble << " is not prime" << endl;
   // }
 
-  int mod = find_modulus(rdecimalVector.size(), max_in_array(rdecimalVector));
+  int mod = find_modulus(rdecimalVector.size(),max_in_array(rdecimalVector)*max_in_array(rdecimalVector)*rdecimalVector.size()+1);
 
   cout << "Modulus is: " << mod << endl;
   // cout << "Max is: " << max_in_array(decimalVector) << endl;
@@ -135,22 +135,37 @@ int main(int argc, char *argv[])
   copy(upf.begin(), upf.end(),ostream_iterator<unsigned int>(cout,"\t"));
   cout << endl;
 
-  copy(rdecimalVector.begin(), rdecimalVector.end(),ostream_iterator<int>(cout,", "));
-  cout << endl;
+  // cout <<"NUM:";
+
+  // copy(rdecimalVector.begin(), rdecimalVector.end(),ostream_iterator<int>(cout,", "));
+  // cout << endl;
+
+  cout << "NTT:";
 
   vector<unsigned int> result1 = ntt(rdecimalVector,root,mod);
   copy(result1.begin(), result1.end(),ostream_iterator<int>(cout,", "));
   cout << endl;
-  cout << result1.size() << endl;
+  //cout << result1.size() << endl;
+  vector<unsigned int> result2;
+  result2.assign(result1.size(),0);
 
-  vector<unsigned int> result2 = intt(result1,root,mod);
-  copy(result2.begin(), result2.end(),ostream_iterator<int>(cout,", "));
+  for(int i = 0 ;  i< result1.size(); i++)
+  {
+    result2[i] = result1[i]*result1[i]%mod;
+  }
+
+  
+  // vector<unsigned int> result2 = intt(result1,root,mod);
+  // //copy(result2.begin(), result2.end(),ostream_iterator<int>(cout,", "));
+  // cout << endl;
+
+  cout << "ITT:";
+  vector<unsigned int> result3 = intt(result2,root,mod);
+  //copy(result3.begin(), result3.end(),ostream_iterator<int>(cout,", "));
   cout << endl;
+  cout << "Res"<< endl;
 
-  vector<unsigned int> result3 = ntt(result1,root,mod);
-  copy(result3.begin(), result3.end(),ostream_iterator<int>(cout,", "));
-  cout << endl;
-
+  cout <<endl << "s:" << result1.size() << "m:"<<mod <<"r:"<<root<<endl;
 
   auto timePrint = system_clock::now();
   time_t timePrint_t = system_clock::to_time_t(timePrint);
@@ -213,8 +228,8 @@ vector<unsigned int> intt(vector<unsigned int>& invector, unsigned int root, uns
   vector<unsigned int> it = ntt(invector,ModReciprocal(root,modulo),modulo);
 
   //cout << ModReciprocal(root,modulo) << "aasdf";
-  copy(it.begin(), it.end(),ostream_iterator<int>(cout,", "));
-  cout << endl;
+  //copy(it.begin(), it.end(),ostream_iterator<int>(cout,", "));
+  //cout << endl;
   unsigned int scale = ModReciprocal(invector.size(), modulo);
   for (int i = 0; i < it.size();  i++)
   {
