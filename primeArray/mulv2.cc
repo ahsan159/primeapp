@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
   result.assign(decimalVector.size(), 0);
   // printDecimalVector(&result);
   cout << endl;
-  vector<unsigned int> rdecimalVector = rearrangeVector(decimalVector,4);
+  vector<unsigned int> rdecimalVector = rearrangeVector(decimalVector,2);
   printDecimalVectorFileComma(&decimalVector,"commaFile.txt");
   printDecimalVectorFileComma(&rdecimalVector,"commaFile1.txt",4);
   // cout << "data4:";
@@ -135,10 +135,9 @@ int main(int argc, char *argv[])
   copy(upf.begin(), upf.end(),ostream_iterator<unsigned int>(cout,"\t"));
   cout << endl;
 
-  // cout <<"NUM:";
-
-  // copy(rdecimalVector.begin(), rdecimalVector.end(),ostream_iterator<int>(cout,", "));
-  // cout << endl;
+   cout <<"NUM:";
+   copy(rdecimalVector.begin(), rdecimalVector.end(),ostream_iterator<int>(cout,", "));
+   cout << endl;
 
   cout << "NTT:";
 
@@ -151,7 +150,8 @@ int main(int argc, char *argv[])
 
   for(int i = 0 ;  i< result1.size(); i++)
   {
-    result2[i] = result1[i]*result1[i]%mod;
+    unsigned long res = result1[i];
+    result2[i] = res*res%mod;
   }
 
   
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
 
   cout << "ITT:";
   vector<unsigned int> result3 = intt(result2,root,mod);
-  //copy(result3.begin(), result3.end(),ostream_iterator<int>(cout,", "));
+  copy(result3.begin(), result3.end(),ostream_iterator<int>(cout,", "));
   cout << endl;
   cout << "Res"<< endl;
 
@@ -211,14 +211,15 @@ vector<unsigned int> ntt(vector<unsigned int>& invector,unsigned int root, unsig
   vector<unsigned int> output;
   for (unsigned int i = 0; i < len; i++)
   {
-    unsigned int sum = 0;
+    unsigned long sum = 0;
     for (unsigned int j = 0; j < len; j++)
     {
-      unsigned int l = i*j%len;
-      unsigned int l2 = (invector[j] * powMod(root,l,modulo))%modulo;
-      sum = (sum + invector[j] * powMod(root,l,modulo))%modulo;
+      unsigned long l = i*j%len;
+      unsigned long li = invector[j];
+      unsigned long l2 = (li * powMod(root,l,modulo))%modulo;
+      sum = (sum + l2)%modulo;
     }
-    output.push_back(sum);
+    output.push_back((unsigned int)sum);
   }
   return output;
 }
@@ -230,7 +231,7 @@ vector<unsigned int> intt(vector<unsigned int>& invector, unsigned int root, uns
   //cout << ModReciprocal(root,modulo) << "aasdf";
   //copy(it.begin(), it.end(),ostream_iterator<int>(cout,", "));
   //cout << endl;
-  unsigned int scale = ModReciprocal(invector.size(), modulo);
+  unsigned long scale = ModReciprocal(invector.size(), modulo);
   for (int i = 0; i < it.size();  i++)
   {
     it[i] = (it[i] * scale) % modulo;
