@@ -28,6 +28,6 @@ void printHex(vector<int>*, const char*);
 void printHexFile(vector<int>*, const char*);
 void getDecimalVector(vector<int>*,vector<unsigned int>*);
 void printDecimalVectorFile(vector<unsigned int>*,const char*);
-void printDecimalVectorFileComma(vector<unsigned int>*,const char*);
-void printDecimalVector(vector<unsigned int>*);
+void printDecimalVectorFileComma(vector<unsigned int>*,const char*,int N = 8);
+void printDecimalVector(vector<unsigned int>*,int);
 void addNumbers(vector<unsigned int>&, vector<unsigned int>&, vector<unsigned int>&);

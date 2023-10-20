@@ -79,12 +79,12 @@ inline void printHexFile(vector<int>* input, const char* str) {
   inFile.close();
 }
 
-void printDecimalVector(vector<unsigned int>* input)
+void printDecimalVector(vector<unsigned int>* input, int N)
  {
     vector<unsigned int>::iterator itr = input->begin();
     while (itr!=input->end())
     {
-        cout << dec << setw(8) << setfill('0') << *itr++;
+        cout << dec << setw(N) << setfill('0') << *itr++;
     }
     return;
  }
@@ -100,13 +100,13 @@ void printDecimalVector(vector<unsigned int>* input)
     return;
  }
 
-void printDecimalVectorFileComma(vector<unsigned int>* input, const char* str)
+void printDecimalVectorFileComma(vector<unsigned int>* input, const char* str,int N)
  {
     ofstream outFile(str,std::ios::out);
     vector<unsigned int>::iterator itr = input->begin();
     while (itr!=input->end())
     {
-        outFile << dec << setw(8) << setfill('0') << *itr++ << ",";
+        outFile << dec << setw(N) << setfill('0') << *itr++ << ",";
     }
     return;
  }

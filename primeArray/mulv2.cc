@@ -43,6 +43,29 @@ int CompareArray(vector<unsigned int> &a, vector<unsigned int> &b);
 vector<unsigned int> AddArray(vector<unsigned int> &a, vector<unsigned int> &b);
 vector<unsigned int> SubtractArray(vector<unsigned int> &a, vector<unsigned int> &b);
 vector<unsigned int> MultiplicativeInverse(vector<unsigned int> a);
+vector<unsigned int> ntt(vector<unsigned int>&,unsigned int, unsigned int);
+
+vector<unsigned int> rearrangeVector(vector<unsigned int> &a,int N);
+
+vector<unsigned int> rearrangeVector(vector<unsigned int> &a,int N)
+{
+  stringstream ss;
+  vector<unsigned int>::iterator itr = a.begin();
+  while (itr != a.end())
+  {
+    ss << setw(8) << setfill('0') << dec << *itr;
+    itr++;
+  }
+  string stringVector = ss.str();
+  //cout << "data :" <<stringVector << endl;
+  vector<unsigned int> rearrangedVector;
+  for (int i = 0; i < stringVector.length(); i+=N)
+  {
+    unsigned int ui = stoul(stringVector.substr(i,N),nullptr,10);
+    rearrangedVector.push_back(ui);
+  }
+  return rearrangedVector;
+}
 
 int primeP;
 int pDabble;
@@ -81,23 +104,37 @@ int main(int argc, char *argv[])
   result.assign(decimalVector.size(), 0);
   // printDecimalVector(&result);
   cout << endl;
+  vector<unsigned int> rdecimalVector = rearrangeVector(decimalVector,4);
   printDecimalVectorFileComma(&decimalVector,"commaFile.txt");
-  // int n = 127;
-  // pDabble = INT_MAX;
-  cout << "vector length: " << decimalVector.size() << endl;
-  if (isprime(pDabble))
-  {
-    cout << pDabble << " is prime" << endl;
-  }
-  else
-  {
-    cout << pDabble << " is not prime" << endl;
-  }
+  printDecimalVectorFileComma(&rdecimalVector,"commaFile1.txt",4);
+  // cout << "data4:";
+  // printDecimalVector(&rdecimalVector,4);
+  // cout << endl;
+  // cout << "data0:";
+  // printDecimalVector(&decimalVector,8);
+  // cout << endl;
+  // stringstream ss;
+  // copy(rdecimalVector.begin(),rdecimalVector.end(),ostream_iterator<int>(ss<<setfill('0')<<setw(4)," "));
+  // cout<<"data1:"<<ss.str() << endl;
+  // stringstream ss1;  
+  // copy(decimalVector.begin(),decimalVector.end(),ostream_iterator<int>(ss1<<setw(8)<<setfill('0')," "));
+  // cout<<"data2:"<<ss1.str() << endl;
+  // // int n = 127;
+  // // pDabble = INT_MAX;
+  // cout << "vector length: " << decimalVector.size() << endl;
+  // if (isprime(pDabble))
+  // {
+  //   cout << pDabble << " is prime" << endl;
+  // }
+  // else
+  // {
+  //   cout << pDabble << " is not prime" << endl;
+  // }
 
-  int mod = find_modulus(decimalVector.size(), max_in_array(decimalVector));
+  int mod = find_modulus(rdecimalVector.size(), max_in_array(rdecimalVector));
 
   cout << "Modulus is: " << mod << endl;
-  cout << "Max is: " << max_in_array(decimalVector) << endl;
+  // cout << "Max is: " << max_in_array(decimalVector) << endl;
   if (isprime(mod))
   {
     cout << mod << " is prime" << endl;
@@ -107,17 +144,21 @@ int main(int argc, char *argv[])
     cout << mod << " is not prime" << endl;
   }
 
-  unsigned int root = find_primitive_root(decimalVector.size(),mod-1,mod);
+  unsigned int root = find_primitive_root(rdecimalVector.size(),mod-1,mod);
   // unsigned int root = find_primitive_root(5,84105730,84105731);
   cout << "Primitive root is: " << endl;
   cout << root << endl;
-  cout << powMod(2,16821146,84105731)<<endl;
-  cout << 67108864%mod << endl;
-  vector<unsigned int> upf = unique_prime_factors(84105730);
+  // cout << powMod(2,16821146,84105731)<<endl;
+  // cout << 67108864%mod << endl;
+  vector<unsigned int> upf = unique_prime_factors(8430);
   cout << endl;
   copy(upf.begin(), upf.end(),ostream_iterator<unsigned int>(cout,"\t"));
   cout << endl;
 
+  vector<unsigned int> result1 = ntt(rdecimalVector,root,mod);
+  copy(result1.begin(), result1.end(),ostream_iterator<int>(cout,", "));
+  cout << endl;
+  cout << result1.size() << endl;
   auto timePrint = system_clock::now();
   time_t timePrint_t = system_clock::to_time_t(timePrint);
   cout << ctime(&timePrint_t) << endl;
@@ -153,6 +194,25 @@ int main(int argc, char *argv[])
   // double d = 1.0;
   // cout << setprecision(100) << d / a << endl;
   return 0;
+}
+
+vector<unsigned int> ntt(vector<unsigned int>& invector,unsigned int root, unsigned int modulo)
+{
+  unsigned int len = invector.size();
+  cout << root  << "lend " << modulo << "len" << len << endl;
+  vector<unsigned int> output;
+  for (unsigned int i = 0; i < len; i++)
+  {
+    unsigned int sum = 0;
+    for (unsigned int j = 0; j < len; j++)
+    {
+      unsigned int l = i*j%len;
+      unsigned int l2 = (invector[j] * powMod(root,l,modulo))%modulo;
+      sum = (sum + invector[j] * powMod(root,l,modulo))%modulo;
+    }
+    output.push_back(sum);
+  }
+  return output;
 }
 
 int find_modulus(int ArrayLength, int MaxElement)
@@ -248,12 +308,12 @@ unsigned int find_generator(int totient, int modulo)
   // returnig -1 will represent error
   if (!(1 <= totient && totient < modulo))
   {
-    cout << "returning from generator" << endl;
+    //cout << "returning from generator" << endl;
     return -1;
   }
   for (unsigned int i = 1; i < modulo; i++)
   {
-    cout << "testing proot" << i << endl;
+    //cout << "testing proot" << i << endl;
     if (is_primitive_root(i, totient, modulo))
     {
       cout << "primitive root" << i << endl;
