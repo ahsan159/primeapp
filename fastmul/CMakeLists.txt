@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 project(fastMul)
 file(GLOB karSrc ${PROJECT_SOURCE_DIR}/karatsubaMul.cc ${PROJECT_SOURCE_DIR}/vecutil.*)
 file(GLOB ssaSrc ${PROJECT_SOURCE_DIR}/ssaMul.cc ${PROJECT_SOURCE_DIR}/vecutil.*)
