@@ -2,6 +2,7 @@
     "cmake.configureOnOpen": false,
     "cmake.sourceDirectory": "/home/ahsan/primeapp/primeArray",
     "files.associations": {
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "ostream": "cpp"
     }
 }
