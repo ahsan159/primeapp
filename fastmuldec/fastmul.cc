@@ -35,14 +35,40 @@ int main(int argc, char **argv)
 
     vector<int> output;
     readPrevious(&output, fileName.c_str());
+    vector<uint16_t> output_16t;
+    readPrevious(&output_16t, fileName);
 
-    for (vector<int>::reverse_iterator itr = output.rbegin(); itr != output.rend(); itr++)
-    {
-        cout << setw(8) << setfill('0') << *itr;
-    }
+    // for (vector<int>::reverse_iterator itr = output.rbegin(); itr != output.rend(); itr++)
+    // {
+    //     cout << setw(8) << setfill('0') << *itr;
+    // }
+    // cout << endl;
+    output_16t.push_back(0);
+    output_16t.push_back(0);
+    printVector(&output);
+    cout << endl;
+    // cout << "printing in uint16_t" << endl;
+    printVector(&output_16t);
     cout << endl;
 
-    printVector(&output);
+    printVector(&output_16t);
+    cout << endl;
+
+    cout << *(output.rbegin()) << endl;
+    removeZero(&output_16t);
+    printVector(&output_16t);
+    cout << endl;
+
+    vector<uint16_t> output2;
+    output2.assign(output_16t.begin(), output_16t.end());
+    *(output2.rbegin()) = 18;
+    // *(output_16t.rbegin()) = 19;
+    cout << compare(&output2, &output_16t) << endl;
+
+    printVector(&output_16t);
+    cout << endl;
+
+    printVector(&output2);
     cout << endl;
 
     auto currTime1 = system_clock::now();
@@ -50,6 +76,8 @@ int main(int argc, char **argv)
     cout << ctime(&currTime_t1);
     cout << "this is the program start: " << INT16_MAX << endl;
     cout << "size of int: " << sizeof(short) << endl;
+    cout << "size of long: " << sizeof(long) << endl;
+    cout << "size of long(long): " << sizeof(long long) << endl;
 
     return 0;
 }

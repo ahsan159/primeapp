@@ -3,6 +3,7 @@
     "cmake.sourceDirectory": "/home/ahsan/primeapp/primeArray",
     "files.associations": {
         "chrono": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "iomanip": "cpp"
     }
 }
